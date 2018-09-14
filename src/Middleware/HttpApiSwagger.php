@@ -2,6 +2,8 @@
 
 namespace Reliv\SwaggerExpressive\Middleware;
 
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Reliv\SwaggerExpressive\Api\BuildSwaggerConfig;
@@ -13,7 +15,7 @@ use Zend\Diactoros\Response\JsonResponse;
  *
  * @author James Jervis - https://github.com/jerv13
  */
-class HttpApiSwagger
+class HttpApiSwagger implements MiddlewareInterface
 {
     protected $routeConfig;
     protected $swaggerConfig;
@@ -50,10 +52,9 @@ class HttpApiSwagger
      * @return JsonResponse
      * @throws \Exception
      */
-    public function __invoke(
+    public function process(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next = null
+        DelegateInterface $delegate = null
     ) {
         $routeConfig = array_filter(
             $this->routeConfig,
